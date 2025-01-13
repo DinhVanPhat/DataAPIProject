@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DataAPIProject")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5278505d2cd6c49e29b5dc75fa73e30ad7d3b281")]
 [assembly: System.Reflection.AssemblyProductAttribute("DataAPIProject")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DataAPIProject")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

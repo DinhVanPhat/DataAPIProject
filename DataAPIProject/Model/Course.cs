@@ -1,7 +1,10 @@
-﻿namespace DataAPIProject.Model
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DataAPIProject.Model
 {
     public class Course
     {
+        [Key]
         public int CourseID { get; set; } // Primary Key
         public string Title { get; set; }
         public int Credits { get; set; }
