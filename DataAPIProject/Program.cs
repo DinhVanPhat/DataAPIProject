@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using DataAPIProject;
 using Microsoft.EntityFrameworkCore;
 using DataAPIProject.AppDbContext;
+using DataAPIProject.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,8 @@ builder.Services.AddDbContext<AppDBContext>(options =>
 // Add other services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<StudentService>();
 
 var app = builder.Build();
 
