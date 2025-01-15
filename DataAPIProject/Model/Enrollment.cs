@@ -9,15 +9,17 @@ public class Enrollment
     public int EnrollmentID { get; set; } // Primary Key
 
     // Foreign Keys
+    [Required]
     [ForeignKey(nameof(Course))] // Khóa ngoại liên kết với bảng Course
     public int CourseID { get; set; }
-
+    [Required]
     [ForeignKey(nameof(Student))] // Khóa ngoại liên kết với bảng Student
     public int StudentID { get; set; }
     public string Grade { get; set; }
 
     // Navigation Properties
-    public Course Course { get; set; }
+    [JsonIgnore]
+    public Course? Course { get; set; }
     [JsonIgnore] // Bỏ qua khi tuần tự hóa
-    public Student Student { get; set; }
+    public Student? Student { get; set; }
 }
