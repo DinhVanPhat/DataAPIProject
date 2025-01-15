@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace DataAPIProject.Model;
 public class Enrollment
@@ -17,5 +18,6 @@ public class Enrollment
 
     // Navigation Properties
     public Course Course { get; set; }
+    [JsonIgnore] // Bỏ qua khi tuần tự hóa
     public Student Student { get; set; }
 }
