@@ -1,12 +1,11 @@
 {
   "Version": 1,
-  "Hash": "NceY5oOFMT/EImavxMFvCFa1qKvT6ATS8b+iD11Gnv4=",
+  "Hash": "TOq7qdqgSO6UCqaoEtS/IOxp7HV4jX3bp31pxVJO53M=",
   "Source": "DataAPIProject",
   "BasePath": "_content/DataAPIProject",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
   "DiscoveryPatterns": [],
-  "Assets": [],
-  "Endpoints": []
+  "Assets": []
 }
