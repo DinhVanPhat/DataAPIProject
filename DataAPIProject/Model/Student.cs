@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace DataAPIProject.Model;
 public class Student
@@ -10,5 +11,6 @@ public class Student
     public DateTime EnrollmentDate { get; set; }
 
     // Navigation Property
+    [JsonIgnore] // Bỏ qua khi tuần tự hóa
     public ICollection<Enrollment> Enrollments { get; set; }
 }

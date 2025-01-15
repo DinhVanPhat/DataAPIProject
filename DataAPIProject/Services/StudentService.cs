@@ -1,6 +1,6 @@
-﻿using DataAPIProject.Model;
+﻿using DataAPIProject.AppDbContext;
+using DataAPIProject.Model;
 using Microsoft.EntityFrameworkCore;
-using DataAPIProject.AppDbContext;
 
 namespace DataAPIProject.Services
 {
@@ -13,86 +13,61 @@ namespace DataAPIProject.Services
             _context = context;
         }
 
-        public async Task<object> GetAllStudentsAsync()
+        // Get all students
+        public async Task<IEnumerable<Student>> GetAllStudentsAsync()
         {
-            try
-            {
-                var students = await _context.Students
-                    .Include(s => s.Enrollments)
-                    .OrderByDescending(s => s.EnrollmentDate)
-                    .ToListAsync();
-                if (students.Count > 0)
-                {
-                    return new
-                    {
-                        code = 0,
-                        status = "success",
-                        data = students,
-                        description = "Show list of successful students."
-                    };
-                }
-                else
-                {
-                    return new
-                    {
-                        code = 1,
-                        status = "fail",
-                        data = students,
-                        description = "No students found"
-                    };
-                }
-            }
-            catch (Exception ex)
-            {
-                return new
-                {
-                    code = 1,
-                    status = "fail",
-                    data = (object)null,
-                    description = $"Internal server error: {ex.Message}"
-                };
-            }
+            return await _context.Students.Include(s => s.Enrollments).ToListAsync();
         }
 
-        public async Task<object> DeleteStudentAsync(int id)
+        // Get student by ID
+        public async Task<Student> GetStudentByIdAsync(int id)
         {
-            try
+            var student = await _context.Students.Include(s => s.Enrollments)
+                                                 .FirstOrDefaultAsync(s => s.ID == id);
+            if (student == null)
             {
-                var student = await _context.Students.FindAsync(id);
-
-                if (student == null)
-                {
-                    return new
-                    {
-                        code = 1,
-                        status = "fail",
-                        data = (object)null,
-                        description = "Student not found."
-                    };
-                }
-
-                _context.Students.Remove(student);
-                await _context.SaveChangesAsync();
-
-                return new
-                {
-                    code = 0,
-                    status = "success",
-                    data = student,
-                    description = "Student deleted successfully."
-                };
+                throw new KeyNotFoundException("Student not found.");
             }
-            catch (Exception ex)
-            {
-                return new
-                {
-                    code = 1,
-                    status = "fail",
-                    data = (object)null,
-                    description = $"Internal server error: {ex.Message}"
-                };
-            }
+            return student;
         }
 
+        // Create a new student
+        public async Task<Student> CreateStudentAsync(Student newStudent)
+        {
+            _context.Students.Add(newStudent);
+            await _context.SaveChangesAsync();
+            return newStudent;
+        }
+
+        // Update an existing student
+        public async Task<Student> UpdateStudentAsync(int id, Student updatedStudent)
+        {
+            var student = await _context.Students.FindAsync(id);
+            if (student == null)
+            {
+                throw new KeyNotFoundException("Student not found.");
+            }
+
+            student.LastName = updatedStudent.LastName;
+            student.FirstMidName = updatedStudent.FirstMidName;
+            student.EnrollmentDate = updatedStudent.EnrollmentDate;
+
+            await _context.SaveChangesAsync();
+            return student;
+        }
+
+        // Delete a student
+        public async Task<bool> DeleteStudentAsync(int id)
+        {
+            var student = await _context.Students.FindAsync(id);
+            if (student == null)
+            {
+                return false;
+            }
+
+            _context.Students.Remove(student);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }
