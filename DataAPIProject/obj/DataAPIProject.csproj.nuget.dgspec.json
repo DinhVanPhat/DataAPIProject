@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\MaiMinhNhat\\ISC_MaiMinhNhat\\Bai1_ThayTrung\\StudentManagementFix\\DataAPIProject\\DataAPIProject.csproj": {}
+    "D:\\ThucTap\\ISC_ALTA\\GitProject\\DataAPIProject\\DataAPIProject\\DataAPIProject.csproj": {}
   },
   "projects": {
-    "D:\\MaiMinhNhat\\ISC_MaiMinhNhat\\Bai1_ThayTrung\\StudentManagementFix\\DataAPIProject\\DataAPIProject.csproj": {
+    "D:\\ThucTap\\ISC_ALTA\\GitProject\\DataAPIProject\\DataAPIProject\\DataAPIProject.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\MaiMinhNhat\\ISC_MaiMinhNhat\\Bai1_ThayTrung\\StudentManagementFix\\DataAPIProject\\DataAPIProject.csproj",
+        "projectUniqueName": "D:\\ThucTap\\ISC_ALTA\\GitProject\\DataAPIProject\\DataAPIProject\\DataAPIProject.csproj",
         "projectName": "DataAPIProject",
-        "projectPath": "D:\\MaiMinhNhat\\ISC_MaiMinhNhat\\Bai1_ThayTrung\\StudentManagementFix\\DataAPIProject\\DataAPIProject.csproj",
-        "packagesPath": "C:\\Users\\maimi\\.nuget\\packages\\",
-        "outputPath": "D:\\MaiMinhNhat\\ISC_MaiMinhNhat\\Bai1_ThayTrung\\StudentManagementFix\\DataAPIProject\\obj\\",
+        "projectPath": "D:\\ThucTap\\ISC_ALTA\\GitProject\\DataAPIProject\\DataAPIProject\\DataAPIProject.csproj",
+        "packagesPath": "C:\\Users\\hoang\\.nuget\\packages\\",
+        "outputPath": "D:\\ThucTap\\ISC_ALTA\\GitProject\\DataAPIProject\\DataAPIProject\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "D:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\maimi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\hoang\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],

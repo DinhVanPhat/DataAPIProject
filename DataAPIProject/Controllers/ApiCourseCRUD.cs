@@ -5,8 +5,8 @@ using DataAPIProject.Services;
 
 namespace DataAPIProject.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class ApiCourseCRUD : ControllerBase
     {
         private readonly CourseService _courseService;
@@ -15,149 +15,76 @@ namespace DataAPIProject.Controllers
         {
             _courseService = courseService;
         }
-
-        // GET: api/Courses
+        // GET: api/apicoursecrud
         [HttpGet]
-        public async Task<ActionResult> GetAllCourse()
+        public IActionResult GetAllCourses()
         {
-            try
-            {
-                var courses = await _courseService.GetAllCoursesAsync();
-                var response = new
-                {
-                    code = 0,
-                    status = "success",
-                    data = courses
-                };
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                var response = new
-                {
-                    code = 1,
-                    status = "fail",
-                    data = new { },
-                    description = ex.Message
-                };
-                return StatusCode(500, response);
-            }
+            var response = _courseService.GetAllCoursesAsync().Result;
+            return StatusCode(200, response);
         }
-
-        // GET: api/Courses/5
+        // GET: api/apicoursecrud/4
         [HttpGet("{id}")]
-        public async Task<ActionResult> GetCourse(int id)
+        public IActionResult GetCourse(int id)
         {
-            var course = await _courseService.GetCourseByIdAsync(id);
-
-            if (course == null)
-            {
-                return NotFound(new
-                {
-                    code = 1,
-                    status = "fail",
-                    data = new { },
-                    description = "Course not found"
-                });
-            }
-
-            return Ok(new
-            {
-                code = 0,
-                status = "success",
-                data = course
-            });
+            var response = _courseService.GetCourseByIdAsync(id).Result;
+            return StatusCode(200, response);
         }
-
-
-
-        // POST: api/Courses
+        // POST: api/apicoursecrud
         [HttpPost]
-        public async Task<ActionResult> PostCourse(Course course)
+        public IActionResult PostCourse([FromBody] CourseDto courseDto)
         {
-            var createdCourse = await _courseService.CreateCourseAsync(course);
-
-            if (createdCourse == null)
+            // Kiểm tra xem trường dữ liệu có hợp lệ không
+            if (!ModelState.IsValid)
             {
                 return BadRequest(new
                 {
                     code = 1,
                     status = "fail",
-                    data = new { },
-                    description = "Course creation failed"
+                    description = "CourseID, Title, and Credits must be provided."
                 });
             }
 
-            return CreatedAtAction(nameof(GetCourse), new { id = createdCourse.CourseID }, new
+            var newCourse = new Course
             {
-                code = 0,
-                status = "success",
-                data = createdCourse
-            });
+                CourseID = courseDto.CourseID,
+                Title = courseDto.Title,
+                Credits = courseDto.Credits,
+            };
+
+            var response = _courseService.CreateCourseAsync(newCourse).Result;
+            return StatusCode(200, response);
         }
-
-
-        // PUT: api/Courses/5
+        // PUT: api/apicoursecrud/4
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCourse(int id, Course course)
+        public IActionResult PutCourse(int id, [FromBody] CourseDto courseDto)
         {
-            if (id != course.CourseID)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(new
                 {
                     code = 1,
                     status = "fail",
-                    data = new { },
-                    description = "Course ID mismatch."
+                    description = "CourseID, Title, and Credits must be provided."
                 });
             }
 
-            var updatedCourse = await _courseService.UpdateCourseAsync(id, course);
-
-            if (updatedCourse == null)
+            var updateCourse = new Course
             {
-                return NotFound(new
-                {
-                    code = 1,
-                    status = "fail",
-                    data = new { },
-                    description = "Course not found"
-                });
-            }
+                CourseID = courseDto.CourseID,
+                Title = courseDto.Title,
+                Credits = courseDto.Credits,
+            };
 
-            return Ok(new
-            {
-                code = 0,
-                status = "success",
-                data = updatedCourse
-            });
+            var response = _courseService.UpdateCourseAsync(id, updateCourse).Result;
+            return StatusCode(200, response);
         }
-
-
-        // DELETE: api/Courses/5
+        // DELETE: api/apicoursecrud/4
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCourse(int id)
+        public IActionResult DeleteCourse(int id)
         {
-            var result = await _courseService.DeleteCourseAsync(id);
-
-            if (!result)
-            {
-                return NotFound(new
-                {
-                    code = 1,
-                    status = "fail",
-                    data = new { },
-                    description = "Course not found"
-                });
-            }
-
-            return Ok(new
-            {
-                code = 0,
-                status = "success",
-                data = new { }
-            });
+            var response = _courseService.DeleteCourseAsync(id).Result;
+            return StatusCode(200, response);
         }
-
     }
+
 }

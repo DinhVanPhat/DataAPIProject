@@ -13,64 +13,131 @@ namespace DataAPIProject.Services
             _context = context;
         }
 
-        // Get all courses
-        public async Task<IEnumerable<Course>> GetAllCoursesAsync()
+        // API success
+        private object ApiResponseSuccess(object data)
         {
-            return await Task.FromResult(_context.Courses.ToList());
+            return new
+            {
+                code = 0,
+                status = "success",
+                data
+            };
+        }
+
+        // API fail
+        private object ApiResponseFail(string description)
+        {
+            return new
+            {
+                code = 1,
+                status = "fail",
+                data = new { },
+                description
+            };
+        }
+
+        // Get all courses
+        public async Task<object> GetAllCoursesAsync()
+        {
+            try
+            {
+                var courses = await Task.FromResult(_context.Courses.ToList());
+                return ApiResponseSuccess(courses);
+            }
+            catch (Exception ex)
+            {
+                return ApiResponseFail(ex.Message);
+            }
         }
 
         // Get course by ID
-        public async Task<Course> GetCourseByIdAsync(int id)
+        public async Task<object> GetCourseByIdAsync(int id)
         {
-            var course = _context.Courses.FirstOrDefault(c => c.CourseID == id);
-            if (course == null)
+            try
             {
-                throw new KeyNotFoundException("Course not found.");
+                var course = _context.Courses.FirstOrDefault(c => c.CourseID == id);
+                if (course == null)
+                {
+                    return ApiResponseFail("Course not found.");
+                }
+
+                return ApiResponseSuccess(course);
             }
-            return await Task.FromResult(course);
+            catch (Exception ex)
+            {
+                return ApiResponseFail(ex.Message);
+            }
         }
 
-        // Create a new course
-        public async Task<Course> CreateCourseAsync(Course newCourse)
-        {
-            if (_context.Courses.Any(c => c.CourseID == newCourse.CourseID))
-            {
-                throw new ArgumentException("Course with the same ID already exists.");
-            }
 
-            _context.Courses.Add(newCourse);
-            await _context.SaveChangesAsync();
-            return newCourse;
+        // Create a new course
+        public async Task<object> CreateCourseAsync(Course newCourse)
+        {
+            try
+            {
+                if (_context.Courses.Any(c => c.CourseID == newCourse.CourseID))
+                {
+                    return ApiResponseFail("Course with the same ID already exists.");
+                }
+                _context.Courses.Add(newCourse);
+                await _context.SaveChangesAsync();
+
+                return ApiResponseSuccess(newCourse);
+            }
+            catch (ArgumentException ex)
+            {
+                return ApiResponseFail(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return ApiResponseFail(ex.Message);
+            }
         }
 
         // Update an existing course
-        public async Task<Course> UpdateCourseAsync(int id, Course updatedCourse)
+        public async Task<object> UpdateCourseAsync(int id, Course updatedCourse)
         {
-            var course = _context.Courses.FirstOrDefault(c => c.CourseID == id);
-            if (course == null)
+            try
             {
-                throw new KeyNotFoundException("Course not found.");
+                var course = _context.Courses.FirstOrDefault(c => c.CourseID == id);
+                if (course == null)
+                {
+                    return ApiResponseFail("Course not found.");
+                }
+
+                course.Title = updatedCourse.Title;
+                course.Credits = updatedCourse.Credits;
+
+                await _context.SaveChangesAsync();
+
+                return ApiResponseSuccess(course);
             }
-
-            course.Title = updatedCourse.Title;
-            course.Credits = updatedCourse.Credits;
-
-            await _context.SaveChangesAsync();
-            return course;
+            catch (Exception ex)
+            {
+                return ApiResponseFail(ex.Message);
+            }
         }
 
         // Delete a course
-        public async Task<bool> DeleteCourseAsync(int id)
+        public async Task<object> DeleteCourseAsync(int id)
         {
-            var course = await _context.Courses.FindAsync(id);
-            if (course == null)
+            try
             {
-                return false; 
-            }
+                var course = await _context.Courses.FindAsync(id);
+                if (course == null)
+                {
+                    return ApiResponseFail("Course not found.");
+                }
 
-            _context.Courses.Remove(course);
-            await _context.SaveChangesAsync();
-            return true;
+                _context.Courses.Remove(course);
+                await _context.SaveChangesAsync();
+
+                return ApiResponseSuccess(new { });
+            }
+            catch (Exception ex)
+            {
+                return ApiResponseFail(ex.Message);
+            }
         }
     }
 }
