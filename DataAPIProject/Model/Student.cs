@@ -1,6 +1,9 @@
-﻿namespace DataAPIProject.Model;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DataAPIProject.Model;
 public class Student
 {
+    [Key]
     public int ID { get; set; } // Primary Key
     public string LastName { get; set; }
     public string FirstMidName { get; set; }
