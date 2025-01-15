@@ -13,31 +13,86 @@ namespace DataAPIProject.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<Student>> GetAllStudentsAsync()
+        public async Task<object> GetAllStudentsAsync()
         {
-            // Logic xử lý dữ liệu
-            return await _context.Students
-                .Include(s => s.Enrollments) // Load dữ liệu liên quan
-                .OrderByDescending(s => s.EnrollmentDate) // Sắp xếp theo ngày ghi danh
-                .ToListAsync();
-        }
-
-        // Phương thức xóa sinh viên theo ID
-        public async Task<bool> DeleteStudentAsync(int id)
-        {
-            var student = await _context.Students.FindAsync(id);
-            if (student == null)
+            try
             {
-                return false; // Không tìm thấy sinh viên
+                var students = await _context.Students
+                    .Include(s => s.Enrollments)
+                    .OrderByDescending(s => s.EnrollmentDate)
+                    .ToListAsync();
+                if (students.Count > 0)
+                {
+                    return new
+                    {
+                        code = 0,
+                        status = "success",
+                        data = students,
+                        description = "Show list of successful students."
+                    };
+                }
+                else
+                {
+                    return new
+                    {
+                        code = 1,
+                        status = "fail",
+                        data = students,
+                        description = "No students found"
+                    };
+                }
             }
-
-            // Xóa sinh viên khỏi DbContext
-            _context.Students.Remove(student);
-
-            // Lưu thay đổi vào cơ sở dữ liệu
-            await _context.SaveChangesAsync();
-
-            return true; // Xóa thành công
+            catch (Exception ex)
+            {
+                return new
+                {
+                    code = 1,
+                    status = "fail",
+                    data = (object)null,
+                    description = $"Internal server error: {ex.Message}"
+                };
+            }
         }
+
+        public async Task<object> DeleteStudentAsync(int id)
+        {
+            try
+            {
+                var student = await _context.Students.FindAsync(id);
+
+                if (student == null)
+                {
+                    return new
+                    {
+                        code = 1,
+                        status = "fail",
+                        data = (object)null,
+                        description = "Student not found."
+                    };
+                }
+
+                _context.Students.Remove(student);
+                await _context.SaveChangesAsync();
+
+                return new
+                {
+                    code = 0,
+                    status = "success",
+                    data = student,
+                    description = "Student deleted successfully."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new
+                {
+                    code = 1,
+                    status = "fail",
+                    data = (object)null,
+                    description = $"Internal server error: {ex.Message}"
+                };
+            }
+        }
+
     }
 }
