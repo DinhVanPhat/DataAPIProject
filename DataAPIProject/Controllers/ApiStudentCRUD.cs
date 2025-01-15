@@ -150,29 +150,29 @@ namespace DataAPIProject.Controllers
 
 
 
-        //// DELETE: api/Students/5
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteStudent(int id)
-        //{
-        //    var result = await _studentService.DeleteStudentAsync(id);
+        // DELETE: api/Students/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteStudent(int id)
+        {
+            var result = await _studentService.DeleteStudentAsync(id);
 
-        //    if (!result)
-        //    {
-        //        return NotFound(new
-        //        {
-        //            code = 1,
-        //            status = "fail",
-        //            data = new { },
-        //            description = "Student not found"
-        //        });
-        //    }
+            if (!result)
+            {
+                return NotFound(new
+                {
+                    code = 1,
+                    status = "fail",
+                    data = new { },
+                    description = "Student not found"
+                });
+            }
 
-        //    return Ok(new
-        //    {
-        //        code = 0,
-        //        status = "success",
-        //        data = new { }
-        //    });
-        //}
+            return Ok(new
+            {
+                code = 0,
+                status = "success",
+                data = new { }
+            });
+        }
     }
 }

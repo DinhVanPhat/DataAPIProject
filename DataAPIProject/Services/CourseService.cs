@@ -79,7 +79,6 @@ namespace DataAPIProject.Services
                 {
                     return ApiResponseFail("Course with the same ID already exists.");
                 }
-                newCourse.Enrollments = null;
                 _context.Courses.Add(newCourse);
                 await _context.SaveChangesAsync();
 
