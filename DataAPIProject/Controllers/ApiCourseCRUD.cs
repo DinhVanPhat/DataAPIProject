@@ -31,10 +31,10 @@ namespace DataAPIProject.Controllers
         }
         // POST: api/apicoursecrud
         [HttpPost]
-        public IActionResult PostCourse([FromBody] Course newCourse)
+        public IActionResult PostCourse([FromBody] CourseDto courseDto)
         {
             // Kiểm tra xem trường dữ liệu có hợp lệ không
-            if (newCourse == null || string.IsNullOrEmpty(newCourse.Title) || newCourse.Credits <= 0)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(new
                 {
@@ -44,14 +44,38 @@ namespace DataAPIProject.Controllers
                 });
             }
 
+            var newCourse = new Course
+            {
+                CourseID = courseDto.CourseID,
+                Title = courseDto.Title,
+                Credits = courseDto.Credits,
+            };
+
             var response = _courseService.CreateCourseAsync(newCourse).Result;
             return StatusCode(200, response);
         }
         // PUT: api/apicoursecrud/4
         [HttpPut("{id}")]
-        public IActionResult PutCourse(int id, [FromBody] Course updatedCourse)
+        public IActionResult PutCourse(int id, [FromBody] CourseDto courseDto)
         {
-            var response = _courseService.UpdateCourseAsync(id, updatedCourse).Result;
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    code = 1,
+                    status = "fail",
+                    description = "CourseID, Title, and Credits must be provided."
+                });
+            }
+
+            var updateCourse = new Course
+            {
+                CourseID = courseDto.CourseID,
+                Title = courseDto.Title,
+                Credits = courseDto.Credits,
+            };
+
+            var response = _courseService.UpdateCourseAsync(id, updateCourse).Result;
             return StatusCode(200, response);
         }
         // DELETE: api/apicoursecrud/4
