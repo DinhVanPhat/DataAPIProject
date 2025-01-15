@@ -5,8 +5,8 @@ using DataAPIProject.Services;
 
 namespace DataAPIProject.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class ApiCourseCRUD : ControllerBase
     {
         private readonly CourseService _courseService;
@@ -15,149 +15,52 @@ namespace DataAPIProject.Controllers
         {
             _courseService = courseService;
         }
-
-        // GET: api/Courses
+        // GET: api/apicoursecrud
         [HttpGet]
-        public async Task<ActionResult> GetAllCourse()
+        public IActionResult GetAllCourses()
         {
-            try
-            {
-                var courses = await _courseService.GetAllCoursesAsync();
-                var response = new
-                {
-                    code = 0,
-                    status = "success",
-                    data = courses
-                };
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                var response = new
-                {
-                    code = 1,
-                    status = "fail",
-                    data = new { },
-                    description = ex.Message
-                };
-                return StatusCode(500, response);
-            }
+            var response = _courseService.GetAllCoursesAsync().Result;
+            return StatusCode(200, response);
         }
-
-        // GET: api/Courses/5
+        // GET: api/apicoursecrud/4
         [HttpGet("{id}")]
-        public async Task<ActionResult> GetCourse(int id)
+        public IActionResult GetCourse(int id)
         {
-            var course = await _courseService.GetCourseByIdAsync(id);
-
-            if (course == null)
-            {
-                return NotFound(new
-                {
-                    code = 1,
-                    status = "fail",
-                    data = new { },
-                    description = "Course not found"
-                });
-            }
-
-            return Ok(new
-            {
-                code = 0,
-                status = "success",
-                data = course
-            });
+            var response = _courseService.GetCourseByIdAsync(id).Result;
+            return StatusCode(200, response);
         }
-
-
-
-        // POST: api/Courses
+        // POST: api/apicoursecrud
         [HttpPost]
-        public async Task<ActionResult> PostCourse(Course course)
+        public IActionResult PostCourse([FromBody] Course newCourse)
         {
-            var createdCourse = await _courseService.CreateCourseAsync(course);
-
-            if (createdCourse == null)
+            // Kiểm tra xem trường dữ liệu có hợp lệ không
+            if (newCourse == null || string.IsNullOrEmpty(newCourse.Title) || newCourse.Credits <= 0)
             {
                 return BadRequest(new
                 {
                     code = 1,
                     status = "fail",
-                    data = new { },
-                    description = "Course creation failed"
+                    description = "CourseID, Title, and Credits must be provided."
                 });
             }
 
-            return CreatedAtAction(nameof(GetCourse), new { id = createdCourse.CourseID }, new
-            {
-                code = 0,
-                status = "success",
-                data = createdCourse
-            });
+            var response = _courseService.CreateCourseAsync(newCourse).Result;
+            return StatusCode(200, response);
         }
-
-
-        // PUT: api/Courses/5
+        // PUT: api/apicoursecrud/4
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCourse(int id, Course course)
+        public IActionResult PutCourse(int id, [FromBody] Course updatedCourse)
         {
-            if (id != course.CourseID)
-            {
-                return BadRequest(new
-                {
-                    code = 1,
-                    status = "fail",
-                    data = new { },
-                    description = "Course ID mismatch."
-                });
-            }
-
-            var updatedCourse = await _courseService.UpdateCourseAsync(id, course);
-
-            if (updatedCourse == null)
-            {
-                return NotFound(new
-                {
-                    code = 1,
-                    status = "fail",
-                    data = new { },
-                    description = "Course not found"
-                });
-            }
-
-            return Ok(new
-            {
-                code = 0,
-                status = "success",
-                data = updatedCourse
-            });
+            var response = _courseService.UpdateCourseAsync(id, updatedCourse).Result;
+            return StatusCode(200, response);
         }
-
-
-        // DELETE: api/Courses/5
+        // DELETE: api/apicoursecrud/4
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCourse(int id)
+        public IActionResult DeleteCourse(int id)
         {
-            var result = await _courseService.DeleteCourseAsync(id);
-
-            if (!result)
-            {
-                return NotFound(new
-                {
-                    code = 1,
-                    status = "fail",
-                    data = new { },
-                    description = "Course not found"
-                });
-            }
-
-            return Ok(new
-            {
-                code = 0,
-                status = "success",
-                data = new { }
-            });
+            var response = _courseService.DeleteCourseAsync(id).Result;
+            return StatusCode(200, response);
         }
-
     }
+
 }
