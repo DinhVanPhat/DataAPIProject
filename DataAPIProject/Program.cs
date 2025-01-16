@@ -1,12 +1,25 @@
-﻿using dotenv.net;
+using dotenv.net;
 using Microsoft.Extensions.DependencyInjection;
 using DataAPIProject;
 using Microsoft.EntityFrameworkCore;
 using DataAPIProject.AppDbContext;
 using DataAPIProject.Services;
 
+// Load biến môi trường từ file .env
+DotEnv.Load();
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+{
+    Args = args,
+    ContentRootPath = Directory.GetCurrentDirectory()
+});
+
+// Đọc file appsettings.json và biến môi trường
+builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables();
+
 // Add services to the container.
 builder.Services.AddControllers();
 
@@ -20,9 +33,6 @@ builder.Services.AddDbContext<AppDBContext>(options =>
 // Add other services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-
-
 
 var app = builder.Build();
 
@@ -40,30 +50,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-/*public class Program
-{
-    public static void Main(string[] args)
-    {
-        // Tải biến môi trường từ file .env
-        //DotEnv.Load(".env");
-
-        CreateHostBuilder(args).Build().Run();
-    }
-
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .ConfigureAppConfiguration((context, config) =>
-            {
-                var env = context.HostingEnvironment;
-                if (env.IsDevelopment())
-                {
-                    config.AddEnvironmentVariables();
-                }
-            })
-            .ConfigureWebHostDefaults(webBuilder =>
-            {
-                //webBuilder.UseStartup<Startup>();
-            });
-}
-*/
